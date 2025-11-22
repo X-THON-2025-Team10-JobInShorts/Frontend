@@ -5,6 +5,7 @@ import './globals.css';
 import { cn } from '@/lib/utils';
 import Footer from '@/layouts/Footer';
 import ProgressBar from './_Provider/ProgressBar';
+import FooterPad from './_Provider/FooterPad';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -39,13 +40,13 @@ export default function RootLayout({
         className={cn(
           geistSans.variable,
           geistMono.variable,
-          'antialiased flex flex-col w-full justify-center items-center h-screen overflow-hidden',
+          'antialiased flex justify-center items-center h-screen',
           IS_DEV ? 'bg-green-400' : 'bg-gray-100',
         )}
       >
         <ProgressBar>
-          <div className="relative flex flex-col w-full max-w-md h-full bg-white shadow-xl overflow-hidden">
-            <main className="flex-1 w-full h-full overflow-y-auto scrollbar-hide">{children}</main>
+          <div className="relative w-full max-w-md h-full bg-white shadow-xl">
+            <FooterPad className="w-full h-full scrollbar-hide">{children}</FooterPad>
             {modal}
             <Footer />
           </div>

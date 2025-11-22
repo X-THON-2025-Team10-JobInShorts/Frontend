@@ -1,19 +1,8 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Play, Search, CirclePlus, MessageCircleMore, UserRound } from 'lucide-react';
 import { cn } from '@/lib/utils'; // cn 유틸리티 사용 권장 (없다면 일반 템플릿 리터럴로 대체 가능)
-
-const ICON_ITEMS = [
-  { title: '숏폼', icon: Play, href: '/shorts' },
-  { title: '검색', icon: Search, href: '/search' },
-  { title: '업로드', icon: CirclePlus, href: '/upload' },
-  { title: '메시지', icon: MessageCircleMore, href: '/messages' },
-  { title: '프로필', icon: UserRound, href: '/profile' },
-];
-
-const DONT_SHOW_FOOTER_PATHS = ['/login', '/upload', '/onboarding'];
-
+import { FOOTER_ITEMS, DONT_SHOW_FOOTER_PATHS } from '@/constants/footer';
 export default function Footer() {
   const pathname = usePathname();
 
@@ -29,14 +18,13 @@ export default function Footer() {
     <footer
       className={cn(
         'w-full flex justify-between items-center px-6 py-2 transition-colors duration-200',
-        // 공통 스타일: 높이 설정
-        'h-14',
+        'h-14 fixed bottom-0 left-1/2 -translate-x-1/2 z-50 max-w-md',
         isShorts
-          ? 'absolute bottom-0 left-0 z-50 bg-linear-to-t from-black/80 to-transparent text-white border-none' // 숏츠: 오버레이, 흰색 텍스트, 투명 배경
-          : 'bg-white text-gray-600 border-t border-gray-200', // 일반: 흰색 배경, 회색 텍스트
+          ? 'bg-linear-to-t from-black/80 to-transparent text-white'
+          : 'bg-white text-gray-600 border-t border-gray-200',
       )}
     >
-      {ICON_ITEMS.map(({ title, icon: Icon, href }) => {
+      {FOOTER_ITEMS.map(({ title, icon: Icon, href }) => {
         const isActive = pathname === href;
         return (
           <Link
