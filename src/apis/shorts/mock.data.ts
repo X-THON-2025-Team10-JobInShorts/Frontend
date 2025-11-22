@@ -1,6 +1,6 @@
-import { type ShortFormFeedResponse } from './dto.types';
+import { type ShortsFeedResponse } from './dto.types';
 
-export const mockFeed: ShortFormFeedResponse = {
+export const mockFeed: ShortsFeedResponse = {
   data: [
     {
       id: 1,

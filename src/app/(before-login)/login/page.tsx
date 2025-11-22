@@ -22,6 +22,12 @@ interface LoginFormData {
   name: string;
 }
 
+interface LoginResponse {
+  success: boolean;
+  pid: string;
+  message?: string;
+}
+
 const IS_DEV = process.env.NODE_ENV === 'development';
 
 const ROLE_BUTTON_TEXT = {
@@ -47,18 +53,15 @@ export default function LoginPage() {
   const [selectedRole, setSelectedRole] = useState<UserRole>('USER');
   const [selectedCity, setSelectedCity] = useState<string>('');
 
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = e.target.value;
-    setSelectedCity(value);
-    console.log('전송될 데이터(영어 Enum Key):', value); // 예: "SEOUL"
-  };
-
   const onSubmit = async (data: LoginFormData) => {
     try {
       // 폼 데이터와 선택된 Role을 합쳐서 전송
       const requestBody = {
-        ...data,
+        loginId: data.id,
+        password: data.password,
         role: selectedRole,
+        displayName: data.name,
+        // city: selectedCity,
       };
 
       const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/login`, {
@@ -67,10 +70,11 @@ export default function LoginPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(requestBody),
+        credentials: 'include',
       });
 
       if (response.ok) {
-        const responseData = await response.json();
+        const responseData: LoginResponse = await response.json();
         localStorage.setItem(LOCAL_STORAGE_KEYS.USER_ROLE, selectedRole);
         if (responseData.pid) {
           localStorage.setItem(LOCAL_STORAGE_KEYS.PID, responseData.pid);
