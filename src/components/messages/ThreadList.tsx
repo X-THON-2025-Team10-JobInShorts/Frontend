@@ -17,17 +17,16 @@ interface ThreadListProps {
 export const ThreadList = ({ currentUserPid, onThreadSelect }: ThreadListProps) => {
   const [threads, setThreads] = useState<ThreadResponse[]>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const loadThreads = async () => {
       try {
         setLoading(true);
-        setError(null);
         const data = await messageApi.getThreads();
-        setThreads(data);
+        setThreads(data || []);
       } catch (err) {
-        setError('스레드 목록을 불러오는데 실패했습니다.');
+        // 에러 발생 시 빈 배열로 설정하여 빈 목록 표시
+        setThreads([]);
         console.error('Thread list error:', err);
       } finally {
         setLoading(false);
@@ -38,8 +37,8 @@ export const ThreadList = ({ currentUserPid, onThreadSelect }: ThreadListProps) 
   }, []);
 
   const getOtherParticipant = (thread: ThreadResponse) => {
-    return thread.participant1Pid === currentUserPid 
-      ? thread.participant2Pid 
+    return thread.participant1Pid === currentUserPid
+      ? thread.participant2Pid
       : thread.participant1Pid;
   };
 
@@ -88,32 +87,6 @@ export const ThreadList = ({ currentUserPid, onThreadSelect }: ThreadListProps) 
     );
   }
 
-  if (error) {
-    return (
-      <div className="w-full flex flex-col h-screen bg-background">
-        <div className="px-4 py-3 border-b border-border">
-          <div className="flex items-center justify-between mb-4">
-            <h1 className="text-xl">your_username</h1>
-            <Button variant="ghost" size="icon">
-              <Edit className="w-5 h-5" />
-            </Button>
-          </div>
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input
-              type="text"
-              placeholder="Search"
-              className="pl-10 bg-input-background border-0 h-9"
-            />
-          </div>
-        </div>
-        <div className="flex-1 flex items-center justify-center text-destructive">
-          <p>{error}</p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="w-full flex flex-col h-screen bg-background">
       <div className="px-4 py-3 border-b border-border">
@@ -140,16 +113,22 @@ export const ThreadList = ({ currentUserPid, onThreadSelect }: ThreadListProps) 
             Requests
           </Button>
         </div>
-        
+
         {threads.length === 0 ? (
-          <div className="px-4 py-8 text-center text-muted-foreground">
-            <p>메시지가 없습니다.</p>
+          <div className="flex flex-col items-center justify-center py-16 px-4">
+            <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
+              <Search className="w-8 h-8 text-muted-foreground" />
+            </div>
+            <p className="text-base font-medium text-foreground mb-1">메시지가 없습니다</p>
+            <p className="text-sm text-muted-foreground text-center">
+              새로운 메시지를 시작하려면 사용자를 검색해보세요
+            </p>
           </div>
         ) : (
-          threads.map((thread) => {
+          threads.map(thread => {
             const otherParticipant = getOtherParticipant(thread);
             const hasUnread = thread.unreadCount > 0;
-            
+
             return (
               <button
                 key={thread.id}
@@ -174,9 +153,13 @@ export const ThreadList = ({ currentUserPid, onThreadSelect }: ThreadListProps) 
                     </span>
                   </div>
                   <div className="flex items-center justify-between gap-2">
-                    <p className={`text-sm truncate ${
-                      hasUnread ? 'text-foreground font-medium' : 'text-muted-foreground font-normal'
-                    }`}>
+                    <p
+                      className={`text-sm truncate ${
+                        hasUnread
+                          ? 'text-foreground font-medium'
+                          : 'text-muted-foreground font-normal'
+                      }`}
+                    >
                       {thread.lastMessage?.content || 'No messages yet'}
                     </p>
                     {hasUnread && (
