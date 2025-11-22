@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 import { useFunnel } from '@/hooks/useFunnel';
 
-export default function UploadPage() {
+export default function ShortsUploader({ isModal = false }: { isModal?: boolean }) {
   // Funnel 정의 (총 3단계)
   const [Funnel, setStep, step] = useFunnel(['Select', 'Details', 'Uploading'] as const);
 
@@ -82,8 +82,13 @@ export default function UploadPage() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50 text-black p-4">
-      <div className="w-full max-w-md bg-white rounded-3xl overflow-hidden shadow-2xl border border-gray-100 relative h-[800px] flex flex-col">
+    <div
+      className={`bg-white text-black ${isModal ? 'w-full h-full' : 'min-h-screen p-4 flex items-center justify-center'}`}
+    >
+      {/* 모달일 때는 꽉 차게, 아닐 때는 카드 형태 */}
+      <div
+        className={`w-full ${isModal ? 'h-full' : 'max-w-md h-[800px] rounded-3xl shadow-2xl border'} flex flex-col bg-white relative overflow-hidden`}
+      >
         {/* 헤더 */}
         <div className="h-14 flex items-center justify-between px-4 border-b border-gray-100 bg-white z-10">
           {step === 'Select' ? (

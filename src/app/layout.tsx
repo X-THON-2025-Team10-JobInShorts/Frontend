@@ -19,14 +19,19 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: 'Job으 Shorts!',
   description: 'A platform to share and discover short videos.',
+  icons: {
+    icon: '/favicon.png',
+  },
 };
 
 const IS_DEV = process.env.NODE_ENV === 'development';
 
 export default function RootLayout({
   children,
+  modal,
 }: Readonly<{
   children: React.ReactNode;
+  modal: React.ReactNode;
 }>) {
   return (
     <html lang="ko">
@@ -41,6 +46,7 @@ export default function RootLayout({
         <ProgressBar>
           <div className="relative flex flex-col w-full max-w-md h-full bg-white shadow-xl overflow-hidden">
             <main className="flex-1 w-full h-full overflow-y-auto scrollbar-hide">{children}</main>
+            {modal}
             <Footer />
           </div>
         </ProgressBar>
