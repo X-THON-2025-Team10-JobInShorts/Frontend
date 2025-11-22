@@ -5,7 +5,7 @@ import { FaArrowUp, FaArrowDown } from 'react-icons/fa';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { ShortsPlayer, ShortsPlayerRef } from '@/components/shorts/ShortsPlayer';
-import { shorts } from '@/data/shorts';
+import { shorts } from '@/mocks/shorts';
 
 function ShortsPageInner() {
   const router = useRouter();
