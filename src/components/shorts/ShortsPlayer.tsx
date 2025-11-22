@@ -3,7 +3,7 @@
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { FaPlay } from 'react-icons/fa';
 
-import type { Short } from '@/data/shorts';
+import type { Short } from '@/mocks/shorts';
 import { usePlaybackStore } from '@/stores/playback.store';
 import { cn } from '@/lib/utils';
 
