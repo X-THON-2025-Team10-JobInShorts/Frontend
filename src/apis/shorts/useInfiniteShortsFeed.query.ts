@@ -6,16 +6,14 @@ import { ShortsFeedResponseSchema } from './dto.schemas';
 const PAGE_SIZE = 10;
 
 async function fetchShortsFeed({ pageParam, pid }: { pageParam?: string | null; pid: string }) {
-  const params = new URLSearchParams();
-  params.append('size', String(PAGE_SIZE));
-  if (pageParam) params.append('pageParam', pageParam);
   if (!pid) {
     throw new Error('PID가 제공되지 않았습니다.');
   }
-  params.append('currentUserPid', pid);
 
-  const res = await instance.get<ShortsFeedResponse>('/api/short-forms/feed', {
-    params,
+  const res = await instance.post<ShortsFeedResponse>('/short-forms/api/feed', {
+    currentUserPid: pid,
+    size: PAGE_SIZE,
+    ...(pageParam ? { pageParam } : {}),
   });
   const parsed = ShortsFeedResponseSchema.safeParse(res.data);
   if (!parsed.success) {
