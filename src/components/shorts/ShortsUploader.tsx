@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import {
   Upload,
   CheckCircle,
@@ -15,6 +15,7 @@ import { useFunnel } from '@/hooks/useFunnel';
 import { getPresignedUrl, uploadToPresignedUrl } from '@/lib/upload.service';
 
 export default function ShortsUploader({ isModal = false }: { isModal?: boolean }) {
+  const router = useRouter();
   // Funnel 정의 (총 3단계)
   const [Funnel, setStep, step] = useFunnel(['Select', 'Details', 'Uploading'] as const);
 
@@ -214,12 +215,12 @@ export default function ShortsUploader({ isModal = false }: { isModal?: boolean 
                       >
                         다른 영상 올리기
                       </button>
-                      <Link
-                        href="/profile"
+                      <button
+                        onClick={() => router.push('/profile')}
                         className="w-full py-3 bg-black text-white rounded-xl font-semibold hover:bg-gray-800 transition-colors"
                       >
                         내 영상 보러가기
-                      </Link>
+                      </button>
                     </div>
                   </>
                 )}
